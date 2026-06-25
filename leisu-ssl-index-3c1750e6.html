@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雷速 · 知识库与可信说明</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #fce8d5 0%, #f3d1b0 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem 1.5rem;
+            line-height: 1.6;
+            color: #2e241e;
+        }
+        .container {
+            max-width: 1100px;
+            width: 100%;
+        }
+        .content-card {
+            background: #fffdfa;
+            border-radius: 28px;
+            box-shadow: 0 12px 28px rgba(120, 70, 40, 0.12), 0 4px 12px rgba(0,0,0,0.04);
+            padding: 2.8rem 3rem;
+            transition: box-shadow 0.2s;
+        }
+        @media (max-width: 600px) {
+            body { padding: 1.5rem 1rem; }
+            .content-card { padding: 2rem 1.5rem; border-radius: 20px; }
+        }
+
+        /* 目录感布局 */
+        .toc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem 2rem;
+            margin: 2rem 0 1.2rem;
+        }
+        @media (max-width: 600px) {
+            .toc-grid { grid-template-columns: 1fr; gap: 1rem; }
+        }
+        .toc-item {
+            background: #f9f2ea;
+            border-radius: 16px;
+            padding: 0.9rem 1.4rem;
+            font-size: 0.95rem;
+            border-left: 4px solid #db8f67;
+            color: #3d2c21;
+            transition: background 0.15s;
+        }
+        .toc-item strong {
+            display: block;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+            color: #633f2a;
+        }
+
+        /* 标题区 */
+        .hero-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: #4a3223;
+            margin-bottom: 0.3rem;
+            line-height: 1.2;
+        }
+        .hero-sub {
+            font-size: 1.1rem;
+            color: #6f4e38;
+            border-bottom: 1px solid #e7d7ca;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.8rem;
+        }
+
+        /* 介绍段落 */
+        .intro-text {
+            margin-bottom: 1.8rem;
+        }
+        .intro-text p {
+            margin-bottom: 1rem;
+        }
+
+        /* 链接按钮风格 */
+        .link-button {
+            display: inline-block;
+            background: #e2caba;
+            padding: 0.55rem 1.5rem;
+            border-radius: 40px;
+            color: #3d2a1c;
+            font-weight: 500;
+            text-decoration: none;
+            border: 1px solid #d1bbaa;
+            transition: 0.15s ease;
+            font-size: 0.95rem;
+            letter-spacing: 0.01em;
+            margin: 0.2rem 0 0.3rem;
+        }
+        .link-button:hover {
+            background: #d4bca9;
+            border-color: #b89b84;
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(100, 60, 30, 0.08);
+        }
+
+        /* 提示区 + 相关信息 */
+        .info-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            margin: 2rem 0 1.5rem;
+        }
+        .info-panel {
+            flex: 1 1 200px;
+            background: #f7ede3;
+            border-radius: 20px;
+            padding: 1.2rem 1.5rem;
+            border: 1px solid #eadace;
+        }
+        .info-panel h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #543d2d;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .info-panel p, .info-panel ul {
+            font-size: 0.92rem;
+            color: #3e2f25;
+        }
+        .info-panel ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .info-panel li {
+            padding: 0.2rem 0 0.2rem 1.2rem;
+            position: relative;
+        }
+        .info-panel li::before {
+            content: "·";
+            position: absolute;
+            left: 0.3rem;
+            color: #b2805f;
+            font-weight: bold;
+        }
+
+        .faq-mini {
+            margin: 2rem 0 1rem;
+            padding: 1.2rem 1.5rem;
+            background: #f5eade;
+            border-radius: 16px;
+        }
+        .faq-mini summary {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #4d3425;
+            cursor: pointer;
+            padding: 0.3rem 0;
+        }
+        .faq-mini p {
+            margin-top: 0.6rem;
+            font-size: 0.92rem;
+            color: #3f2e21;
+        }
+
+        .footer-note {
+            margin-top: 2.4rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #7b604b;
+            border-top: 1px solid #e5d3c4;
+            padding-top: 1.5rem;
+        }
+        .footer-note a {
+            color: #633f2a;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            text-decoration-thickness: 1px;
+            text-decoration-color: #c2a68f;
+        }
+        .footer-note a:hover {
+            color: #3d271b;
+        }
+
+        .inline-link {
+            color: #6d4a33;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-color: #c7aa93;
+            font-weight: 500;
+        }
+        .inline-link:hover {
+            color: #3f2a1d;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="content-card">
+
+        <!-- 标题 / 入口感 -->
+        <div class="hero-title">📚 雷速 · 知识库导航</div>
+        <div class="hero-sub">站点介绍 · 可信说明 · 使用指引</div>
+
+        <!-- 目录感网格 -->
+        <div class="toc-grid">
+            <div class="toc-item"><strong>1. 关于雷速</strong>平台定位与主要服务方向</div>
+            <div class="toc-item"><strong>2. 可信说明</strong>信息筛选与参考原则</div>
+            <div class="toc-item"><strong>3. 常用场景</strong>资讯查阅 / 数据参考 / 兴趣延伸</div>
+            <div class="toc-item"><strong>4. 注意事项</strong>使用前请了解相关边界</div>
+        </div>
+
+        <!-- 介绍区：站点介绍与可信说明 -->
+        <div class="intro-text">
+            <p>
+                本站所指向的 <strong>雷速</strong> 是一个聚合体育资讯与相关数据参考的站点，内容涵盖赛事动态、队伍信息及部分历史统计。作为信息索引页，这里整理了关于 
+                <a href="https://leisu-ssl-sport.com" class="inline-link">雷速</a> 
+                的基本介绍与使用建议，帮助初次接触的用户快速了解其内容构成和可信区间。
+            </p>
+            <p>
+                <strong>可信说明：</strong> 雷速所呈现的资讯均来自公开可查的渠道，并经过基础核实。但体育数据具有实时更新特点，建议用户结合多个来源交叉确认。本页仅做知识指引，不构成专业投资或决策建议。平台本身不参与任何形式的博彩或非法竞猜，所有内容仅限信息参考。
+            </p>
+        </div>
+
+        <!-- 特点 + 场景（卡片化） -->
+        <div class="info-grid">
+            <div class="info-panel">
+                <h3>📋 内容特点</h3>
+                <ul>
+                    <li>赛事比分与赛程整理</li>
+                    <li>联赛数据趋势概览</li>
+                    <li>队伍及球员基础档案</li>
+                    <li>资讯更新保持日常节奏</li>
+                </ul>
+            </div>
+            <div class="info-panel">
+                <h3>⚙️ 适用场景</h3>
+                <ul>
+                    <li>赛前快速了解对阵背景</li>
+                    <li>赛后回顾比分与关键节点</li>
+                    <li>体育兴趣者日常信息补充</li>
+                    <li>横向对比不同联赛数据</li>
+                </ul>
+            </div>
+            <div class="info-panel">
+                <h3>🔍 相关说明</h3>
+                <p>
+                    数据延迟为行业常见情况，请以官方实时结果为准。雷速不对第三方引用内容承担法律责任，用户应自行判断信息时效。
+                </p>
+            </div>
+        </div>
+
+        <!-- 提示区 + 常见问题摘要 -->
+        <div class="faq-mini">
+            <details>
+                <summary>📌 使用提示 & FAQ 摘要</summary>
+                <p>
+                    <strong>Q：雷速的数据更新频率？</strong><br>
+                    日常赛事数据通常在结束后数分钟内更新，重大赛事可能略有延迟。建议高峰期稍作等待后刷新。
+                </p>
+                <p>
+                    <strong>Q：是否包含深度分析或预测？</strong><br>
+                    雷速主要提供客观数据与基础资讯，不输出比赛预测或投注建议。所有内容仅作兴趣参考。
+                </p>
+                <p>
+                    <strong>Q：移动端浏览体验如何？</strong><br>
+                    页面适配手机与平板，核心功能均可正常使用。如遇显示异常可尝试横屏或更新浏览器。
+                </p>
+                <p style="margin-top:0.8rem;">
+                    ⚠️ 任何平台信息都不应作为唯一决策依据。请保持理性，合理分配时间和精力。
+                </p>
+            </details>
+        </div>
+
+        <!-- 入口链接（自然嵌入句子，文本严格为「雷速」） -->
+        <div style="margin: 1.8rem 0 0.8rem; text-align: center;">
+            <span style="background: #f1e4d8; padding: 0.4rem 1.8rem; border-radius: 60px; display: inline-block;">
+                🔗 若需直接访问站点，可前往 <a href="https://leisu-ssl-sport.com" class="link-button">雷速</a>
+                ，获取更多赛事信息。
+            </span>
+        </div>
+
+        <!-- 相关信息区（额外说明） -->
+        <div style="margin: 2rem 0 0.5rem; background: #f3e7dc; border-radius: 18px; padding: 1.2rem 1.6rem;">
+            <h3 style="font-weight:600; font-size:1rem; color:#4d3425; margin-bottom:0.3rem;">📎 相关信息</h3>
+            <p style="font-size:0.92rem; color:#3f2e21;">
+                本知识库页面仅为信息索引，不存储任何用户数据，也不收集个人隐私。
+                所有外部链接均指向 <a href="https://leisu-ssl-sport.com" class="inline-link">雷速</a> 
+                主站，建议在浏览时注意甄别网络环境与设备安全。
+            </p>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer-note">
+            内容整理 · 知识库式指引 ｜ 仅供信息参考 · 请合理使用<br>
+            <span style="font-size:0.8rem; opacity:0.65;">页面版本 · 2025</span>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
